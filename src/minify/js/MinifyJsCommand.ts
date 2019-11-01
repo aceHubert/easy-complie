@@ -75,7 +75,8 @@ class MinifyJsCommand
                     content = opts.surround.replace(/\$\{code\}/g, content.replace(/\$/g, '$$$$'));
                 }
                 let results = minjs.minify(content, opts);
-                return writeFileContents(filename, results.code);
+                let newFilename = filename.endsWith('.min.js') ? filename : path.resolve(path.dirname(filename), path.basename(filename, '.js') + '.min.js')
+                return writeFileContents(newFilename, results.code);
             }).then(() =>
             {
                 let elapsedTime: number = (Date.now() - startTime);
@@ -116,7 +117,7 @@ class MinifyJsCommand
                     this.lessDiagnosticCollection.set(this.document.uri, [diagnosis]);
                 }
 
-                StatusBarMessage.show("$(alert) Error compiling less (more detail in Errors and Warnings)", StatusBarMessageTypes.ERROR);
+                StatusBarMessage.show("$(alert) Error compiling js (more detail in Errors and Warnings)", StatusBarMessageTypes.ERROR);
             });
     }
 }
